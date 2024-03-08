@@ -21,7 +21,8 @@
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 import copy
-
+import pandas as pd
+import os
 
 @dataclass
 class State:
@@ -88,4 +89,11 @@ if __name__ == '__main__':
         (5, "Sunflowers bloomed in the radiant sunlight.", "Radiant sunlight illuminated the field of blooming sunflowers."),
         (6, "Gentle waves lapped against the sandy shore.", "The shore echoed with the soothing sounds of lapping waves.")
     ]
-    print(solve(input_data))
+    output = solve(input_data)
+    print(f'The output is {output}')
+
+    df = pd.DataFrame(output, columns=['ID', 'Longest_Common_Substring'])
+
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    output_file = os.path.join(current_dir, 'out', 'longest_common_substring.xlsx')
+    df.to_excel(output_file, index=False)
