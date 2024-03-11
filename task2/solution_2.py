@@ -35,7 +35,7 @@ def solve(input: List[int]) -> Tuple[int, List[State]]:
     right_pnt = len(input) - 1
     max_right_height = input[right_pnt]
 
-    while True:
+    while (left_pnt != right_pnt):
         left_height = input[left_pnt]
         right_height = input[right_pnt]
 
@@ -55,8 +55,8 @@ def solve(input: List[int]) -> Tuple[int, List[State]]:
             else:
                 max_left_height = input[left_pnt]
 
-        if left_pnt == right_pnt:
-            return sand, states
+    states.append(State(input, left_pnt, max_left_height, right_pnt, max_right_height, sand))
+    return sand, states
 
 
 if __name__ == '__main__':

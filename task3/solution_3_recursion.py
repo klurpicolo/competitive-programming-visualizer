@@ -47,30 +47,39 @@ class State:
     str2_idx: int
     longest_common_substring: str
     
-
-def get_longest_common_substring(str1: str, str2: str, str1_idx: int, str2_idx: int) -> str:
-
-    max_length = 0
-    substring_pos = (0,0)
+  
+def get_longest_common_substring(str1: str, str2: str) -> string:
+    tracking = {
+      'max_length': 0,
+      'substring_pos': (0, 0)
+    }
     memo = [[-1 for _ in range(len(str2))] for _ in range(len(str1))]
 
-    def recursive(str1: str, str2: str, str1_idx: int, str2_idx: int) -> str:
+    def recursive(str1: str, str2: str, str1_idx: int, str2_idx: int) -> int:
         if str1_idx == -1 or str2_idx == -1 :
-            return ''
+            return 0
         if memo[str1_idx][str2_idx] != -1:
             return memo[str1_idx][str2_idx]
         
         
+        recursive(str1, str2, str1_idx, str2_idx-1) # traverse 2 paths and remember the result
+        recursive(str1, str2, str1_idx-1, str2_idx)
+        local_max = recursive(str1, str2, str1_idx-1, str2_idx-1) + 1 # visit other nodes first
+
         char1 = str1[str1_idx]
         char2 = str2[str2_idx]
         if (char1 == char2):
-            
-            local_max = get_longest_common_substring(str1, str2, str1_idx-1, str2_idx-1) + char1
-            if len(local_max) > len(longest):
-                longest = local_max
-            return get_longest_common_substring(str1, str2, str1_idx-1, str2_idx-1) + char1
+            local_max = recursive(str1, str2, str1_idx-1, str2_idx-1) + 1
+            if local_max > tracking['max_length']:
+                tracking['max_length'] = local_max
+                tracking['substring_pos'] = (str1_idx, str2_idx)
+            memo[str1_idx][str2_idx] = local_max
+            return local_max
         else:
-            return ''
+            return 0
+        
+    recursive(str1, str2, len(str1)-1, len(str2)-1)
+    return str1[tracking['substring_pos'][0]-tracking['max_length']+1: tracking['substring_pos'][0]+1]
     
 
 
@@ -79,7 +88,7 @@ def get_longest_common_substring(str1: str, str2: str, str1_idx: int, str2_idx: 
 def solve(input: List[Tuple[int, str, str]]) -> Dict[int, str]:
     output = []
     for id, str1, str2 in input:
-        result = get_longest_common_substring(str1, str2, len(str1), len(str2))
+        result = get_longest_common_substring(str1, str2)
         output.append((id, result))
     return output
     
@@ -88,14 +97,16 @@ if __name__ == '__main__':
     input_data = [
         # (1, "ascascaacsacasc", "kopkopaacskopko"),
 
-        (1, "ababbacdee", "haababadeedc"),
+        (1, "a", "a"),
         # (2, "Thisisadocumentcontainingpatienthistory", "Theletteringinthisstoryisquite unique"),
         # (3, "abcdefgxyz123", "xyz789abcdef"),
         # (4, "The adventurous cat explored the mysterious cave.", "A curious cat ventured into the dark cave for exploration."),
         # (5, "Sunflowers bloomed in the radiant sunlight.", "Radiant sunlight illuminated the field of blooming sunflowers."),
         # (6, "Gentle waves lapped against the sandy shore.", "The shore echoed with the soothing sounds of lapping waves.")
     ]
-    output = solve(input_data)
-    print(f'the answer of input {input_data} is {output}')
+    # output = solve(input_data)
+    # print(f'the answer of input {input_data} is {output}')
     # for state in states:
     #     print(state)
+
+    print(get_longest_common_substring('aa','aab'))
