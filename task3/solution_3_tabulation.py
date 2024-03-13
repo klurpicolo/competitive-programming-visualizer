@@ -19,13 +19,14 @@
 
 
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 import copy
 import pandas as pd
 import os
 
 @dataclass
 class State:
+    state_iter: int
     str1: str
     str2: str
     str1_idx: int
@@ -42,6 +43,7 @@ def get_longest_common_substring(str1: str, str2: str, is_state_record: bool = F
     # - table store the max lenght of longest common substring that `ends` on that position
     table = [[0 for _ in range(len(str2)+1)] for _ in range(len(str1)+1)]
     states = []
+    state_iter = 1
     max_length = 0
     max_substring_pos = (0,0)
 
@@ -52,7 +54,8 @@ def get_longest_common_substring(str1: str, str2: str, is_state_record: bool = F
             char1 = str1[str1_idx]
             char2 = str2[str2_idx]
             if is_state_record:
-                states.append(State(str1, str2, str1_idx, str2_idx, copy.deepcopy(table), max_length, max_substring_pos))
+                states.append(State(state_iter, str1, str2, str1_idx, str2_idx, copy.deepcopy(table), max_length, max_substring_pos))
+                state_iter += 1
             if char1 != char2:
                 table[i][j] = 0
             else:
@@ -76,7 +79,7 @@ def read_excel() -> List[Tuple[int, str, str]]:
 # n = size of list
 # i, j = length of str1, and str2
 # Time complexity: n * i * j
-# Space complexity: i * j
+# Space complexity: i * j  (because we don't process in parallel, so we only require i * j memory a time)
 def solve(input: List[Tuple[int, str, str]]) -> List[Tuple[int, str]]:
     output = []
     for id, str1, str2 in input:
