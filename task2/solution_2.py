@@ -17,6 +17,7 @@ class State:
     right_pnt: int
     max_right_height: int
     sand: int
+    state_type: str
 
 
 # Time complexity: O(n)
@@ -39,7 +40,7 @@ def solve(input: List[int]) -> Tuple[int, List[State]]:
         left_height = input[left_pnt]
         right_height = input[right_pnt]
 
-        states.append(State(input, left_pnt, max_left_height, right_pnt, max_right_height, sand))
+        states.append(State(input, left_pnt, max_left_height, right_pnt, max_right_height, sand, 'Iteration'))
 
         # move the shorter height, then get sand from diff of max height and its height
         if left_height > right_height:
@@ -55,7 +56,7 @@ def solve(input: List[int]) -> Tuple[int, List[State]]:
             else:
                 max_left_height = input[left_pnt]
 
-    states.append(State(input, left_pnt, max_left_height, right_pnt, max_right_height, sand))
+    states.append(State(input, left_pnt, max_left_height, right_pnt, max_right_height, sand, 'End'))
     return sand, states
 
 

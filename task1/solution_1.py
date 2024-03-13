@@ -14,12 +14,13 @@ class State:
     start_idx: int
     end_idx: int
     output: List[List[int]]
+    type: str
 
-# With out sort
+# Without sorting
 # Time complexity: O(n)
 # Space complexity: O(1)
     
-# With sort
+# With sorting
 # Time complexity: O(nlogn)
 # Space complexity: O(1)
 def solve(input: List[int]) -> Tuple[List[List[int]], List[State]]:
@@ -35,17 +36,17 @@ def solve(input: List[int]) -> Tuple[List[List[int]], List[State]]:
     output = []
     start_idx = 0
     end_idx = 1
-    states.append(State(input, start_idx, end_idx, output.copy()))
+    states.append(State(input, start_idx, end_idx, output.copy(), 'Start'))
 
     while end_idx < len(input):
         if input[end_idx] != input[end_idx-1] + 1:
             output.append([input[start_idx], input[end_idx-1]])
             start_idx = end_idx
-        states.append(State(input, start_idx, end_idx, output.copy()))
+        states.append(State(input, start_idx, end_idx, output.copy(), 'Iteration'))
         end_idx += 1
 
     output.append([input[start_idx], input[end_idx-1]])
-    states.append(State(input, start_idx, end_idx, output.copy()))
+    states.append(State(input, start_idx, end_idx, output.copy(), 'End'))
     return output, states
 
 if __name__ == '__main__':
